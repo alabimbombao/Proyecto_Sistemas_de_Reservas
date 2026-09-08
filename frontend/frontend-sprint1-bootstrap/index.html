@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sistema de Reservas | Iniciar sesión</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="auth-page">
+  <main class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
+    <div class="row w-100 justify-content-center">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+        <section class="card auth-card shadow border-0">
+          <div class="card-body p-4 p-md-5">
+            <div class="text-center mb-4">
+              <div class="brand-logo mx-auto mb-3">SR</div>
+              <h1 class="h3 fw-bold mb-1">Sistema de Reservas</h1>
+              <p class="text-secondary mb-0">Inicia sesión para continuar</p>
+            </div>
+
+            <div id="loginAlert" class="alert d-none" role="alert"></div>
+
+            <form id="loginForm" novalidate>
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label fw-semibold">Correo electrónico <span class="text-danger">*</span></label>
+                <input type="email" class="form-control form-control-lg" id="loginEmail"
+                       placeholder="correo@ejemplo.com" autocomplete="email" required>
+                <div class="invalid-feedback">Ingresa un correo válido.</div>
+              </div>
+
+              <div class="mb-4">
+                <label for="loginPassword" class="form-label fw-semibold">Contraseña <span class="text-danger">*</span></label>
+                <div class="input-group input-group-lg">
+                  <input type="password" class="form-control" id="loginPassword"
+                         placeholder="Ingresa tu contraseña" autocomplete="current-password" minlength="8" required>
+                  <button class="btn btn-outline-secondary" type="button" id="toggleLoginPassword"
+                          aria-label="Mostrar contraseña">👁</button>
+                  <div class="invalid-feedback">La contraseña es obligatoria y debe tener mínimo 8 caracteres.</div>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold">Iniciar Sesión</button>
+            </form>
+
+            <p class="text-center mt-4 mb-0">
+              ¿No tienes cuenta?
+              <a href="registro.html" class="fw-semibold text-decoration-none">Registrarse</a>
+            </p>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+  <script src="js/auth.js"></script>
+</body>
+</html>

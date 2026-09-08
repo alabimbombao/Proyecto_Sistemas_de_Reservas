@@ -1,0 +1,111 @@
+:root {
+  --primary: #2563EB;
+  --primary-dark: #1E3A8A;
+  --background: #F8FAFC;
+  --surface: #FFFFFF;
+  --text: #1E293B;
+  --secondary: #64748B;
+  --success: #16A34A;
+  --warning: #F59E0B;
+  --error: #DC2626;
+  --info: #0284C7;
+  --border: #CBD5E1;
+}
+
+body {
+  color: var(--text);
+  background: var(--background);
+}
+
+.auth-page {
+  background: linear-gradient(135deg, #eff6ff 0%, var(--background) 55%, #dbeafe 100%);
+}
+
+.auth-card {
+  border-radius: 1rem;
+}
+
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary);
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 800;
+  box-shadow: 0 10px 25px rgba(37, 99, 235, .2);
+}
+
+.form-control:focus,
+.form-check-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 .25rem rgba(37, 99, 235, .15);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-dark);
+}
+
+.app-navbar {
+  background: var(--primary-dark);
+  min-height: 64px;
+}
+
+.sidebar {
+  width: 250px;
+  min-height: calc(100vh - 64px);
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+}
+
+.sidebar .nav-link,
+.offcanvas .nav-link {
+  color: var(--text);
+  border-radius: .6rem;
+  padding: .75rem;
+  margin-bottom: .25rem;
+}
+
+.sidebar .nav-link:hover,
+.offcanvas .nav-link:hover,
+.sidebar .nav-link.active,
+.offcanvas .nav-link.active {
+  background: #eff6ff;
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.dashboard-page main {
+  min-height: calc(100vh - 64px);
+}
+
+.stat-card {
+  border-top: 4px solid var(--primary) !important;
+  border-radius: .9rem;
+}
+
+.stat-icon {
+  font-size: 2rem;
+  background: #eff6ff;
+  padding: .6rem;
+  border-radius: .75rem;
+}
+
+@media (max-width: 575.98px) {
+  .auth-card .card-body {
+    padding: 1.5rem !important;
+  }
+
+  .navbar-brand {
+    font-size: .95rem;
+  }
+}
