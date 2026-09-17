@@ -11,16 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Descargar código fuente
+      - name: Descargar codigo fuente
         uses: actions/checkout@v4
 
-      - name: Configurar Node.js
+      - name: Configurar Node.js v20
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
       - name: Instalar dependencias
-        run: npm install
+        run: |
+          if [ -f package.json ]; then npm install; fi
 
-      - name: Verificar compilación / sintaxis
-        run: npm run build --if-present
+      - name: Validar compilacion o scripts
+        run: |
+          if [ -f package.json ]; then npm run build --if-present; else echo "Entorno inicial sin package.json listo"; fi
