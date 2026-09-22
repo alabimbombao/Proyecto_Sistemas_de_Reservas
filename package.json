@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon server.js",
     "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node test_endpoints.js"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +21,7 @@
     "mongoose": "^9.9.5"
   },
   "devDependencies": {
+    "mongodb-memory-server": "^11.3.0",
     "nodemon": "^3.1.14"
   }
 }
