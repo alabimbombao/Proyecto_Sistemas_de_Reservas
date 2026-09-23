@@ -5,118 +5,337 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Sistema de Reservas | Dashboard</title>
+  <!-- Bootstrap 5.3 CSS (Local y CDN fallback) -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Estilos Personalizados -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body class="dashboard-page">
-  <nav class="navbar navbar-dark navbar-expand-lg app-navbar">
-    <div class="container-fluid">
-      <button class="btn btn-outline-light d-lg-none me-2" type="button" data-bs-toggle="offcanvas"
-        data-bs-target="#sidebar">☰</button>
-      <a class="navbar-brand fw-bold" href="dashboard.html">SR · Sistema de Reservas</a>
-      <div class="dropdown">
-        <button class="btn btn-link text-white text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
-          <span id="navbarUser">Usuario</span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li><button id="logoutBtn" class="dropdown-item text-danger">Cerrar Sesión</button></li>
-        </ul>
+
+  <!-- Navbar Superior -->
+  <nav class="navbar navbar-dark navbar-expand-lg app-navbar px-3 px-md-4 sticky-top">
+    <div class="container-fluid px-0">
+      <!-- Botón Menú Móvil -->
+      <button class="btn btn-outline-light d-lg-none me-2 p-1 px-2 border-0" type="button" data-bs-toggle="offcanvas"
+        data-bs-target="#sidebarOffcanvas" aria-label="Abrir menú de navegación">
+        <span class="fs-5">☰</span>
+      </button>
+
+      <!-- Logo y Marca -->
+      <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="dashboard.html">
+        <span class="badge bg-primary text-white rounded-3 px-2 py-1 fs-6">SR</span>
+        <span>Sistema de Reservas</span>
+      </a>
+
+      <!-- Estado de Sincronización y Perfil -->
+      <div class="d-flex align-items-center gap-2 ms-auto">
+        <!-- Indicador de sincronización API / LocalStorage -->
+        <span id="syncStatus" class="sync-status-badge text-white d-none d-sm-inline-flex">
+          <span class="sync-dot sync-local"></span> Conectando...
+        </span>
+
+        <!-- Dropdown de Usuario -->
+        <div class="dropdown">
+          <button class="btn user-pill text-white text-decoration-none dropdown-toggle d-flex align-items-center gap-2"
+            type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center"
+              style="width: 28px; height: 28px; font-size: 0.8rem; font-weight: 700;">
+              👤
+            </span>
+            <span id="navbarUser" class="fw-semibold">Cargando...</span>
+            <span id="userRoleBadge" class="role-badge role-badge-user ms-1">Usuario</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+            <li>
+              <a class="dropdown-item py-2 d-flex align-items-center gap-2" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+                <span>👤</span> Ver Mi Perfil
+              </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+              <button id="logoutBtn" class="dropdown-item text-danger py-2 d-flex align-items-center gap-2">
+                <span>🚪</span> Cerrar Sesión
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>
 
   <div class="d-flex">
-    <aside class="sidebar d-none d-lg-flex flex-column p-3">
-      <div class="small text-uppercase text-secondary fw-bold mb-2">Menú principal</div>
-      <a class="nav-link active" href="dashboard.html">🏠 Dashboard</a>
-      <a class="nav-link" href="#">👥 Usuarios</a>
-      <a class="nav-link" href="#">🛠 Servicios</a>
-      <a class="nav-link" href="#">📅Reservas</a>
-      <a class="nav-link" href="#">👤 Mi perfil</a>
+    
+    <!-- Sidebar de Escritorio (persistente en >= lg) -->
+    <aside class="sidebar d-none d-lg-flex flex-column">
+      <div class="sidebar-category">Navegación</div>
+      <a class="nav-link active" href="dashboard.html">
+        <span>🏠</span> Dashboard
+      </a>
+      
+      <!-- Menú Exclusivo para Administrador -->
+      <div class="admin-only">
+        <div class="sidebar-category">Gestión Administrativa</div>
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notImplementedModal">
+          <span>👥</span> Control de Usuarios
+        </a>
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notImplementedModal">
+          <span>🛠️</span> Catálogo de Servicios
+        </a>
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notImplementedModal">
+          <span>📅</span> Todas las Reservas
+        </a>
+      </div>
+
+      <!-- Menú Exclusivo para Clientes -->
+      <div class="user-only d-none">
+        <div class="sidebar-category">Mis Opciones</div>
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#newReservationModal">
+          <span>➕</span> Solicitar Reserva
+        </a>
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notImplementedModal">
+          <span>📋</span> Mis Reservas Activas
+        </a>
+      </div>
+
+      <div class="sidebar-category mt-auto">Cuenta</div>
+      <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">
+        <span>⚙️</span> Mi Perfil
+      </a>
     </aside>
 
-    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebar">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title fw-bold">Sistema de Reservas</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    <!-- Sidebar Offcanvas Móvil (< lg) -->
+    <div class="offcanvas offcanvas-start" tabindex="-1" id="sidebarOffcanvas" aria-labelledby="sidebarOffcanvasLabel">
+      <div class="offcanvas-header border-bottom">
+        <h5 class="offcanvas-title fw-bold" id="sidebarOffcanvasLabel">Sistema de Reservas</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
       </div>
-      <div class="offcanvas-body">
+      <div class="offcanvas-body d-flex flex-column">
+        <div class="sidebar-category">Navegación</div>
         <a class="nav-link active mb-2" href="dashboard.html">🏠 Dashboard</a>
-        <a class="nav-link mb-2" href="#">👥 Usuarios</a>
-        <a class="nav-link mb-2" href="#">🛠 Servicios</a>
-        <a class="nav-link mb-2" href="#">📅 Reservas</a>
-        <a class="nav-link" href="#">👤 Mi perfil</a>
+        <a class="nav-link mb-2" href="#" data-bs-toggle="modal" data-bs-target="#newReservationModal">➕ Nueva Reserva</a>
+        <a class="nav-link mb-2" href="#" data-bs-toggle="modal" data-bs-target="#profileModal">👤 Mi Perfil</a>
+        <hr>
+        <button class="btn btn-outline-danger w-100 mt-auto" data-bs-toggle="modal" data-bs-target="#logoutModal">
+          Cerrar Sesión
+        </button>
       </div>
     </div>
 
+    <!-- Contenido Principal -->
     <main class="flex-grow-1 p-3 p-md-4">
-      <div class="container-fluid">
-        <div class="mb-4">
-          <h1 class="h2 fw-bold">Dashboard</h1>
-          <p class="text-secondary mb-0">Resumen general del sistema.</p>
+      <div class="container-fluid max-w-7xl">
+        
+        <!-- Saludo y Bienvenida -->
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+          <div>
+            <h1 class="h2 fw-bold text-dark mb-1">
+              ¡Hola, <span id="greetingName" class="text-primary">Usuario</span>! 👋
+            </h1>
+            <p class="text-secondary mb-0">Panel de control de indicadores y gestión del sistema de reservas.</p>
+          </div>
+          <div>
+            <button class="btn btn-primary d-inline-flex align-items-center gap-2 shadow-sm" data-bs-toggle="modal" data-bs-target="#newReservationModal">
+              <span>➕</span> Nueva Reserva
+            </button>
+          </div>
         </div>
 
+        <!-- Alerta Dinámica -->
         <div id="dashboardAlert" class="alert d-none" role="alert"></div>
 
-        <div class="row g-4 mb-4">
+        <!-- Tarjetas Estadísticas (Métricas Principales HUS-03) -->
+        <div class="row g-3 g-md-4 mb-4">
+          
+          <!-- Total Usuarios -->
           <div class="col-12 col-md-4">
-            <div class="card stat-card shadow-sm border-0 h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+            <div class="card stat-card stat-card-users h-100">
+              <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <p class="text-secondary mb-1">Total Usuarios</p>
-                    <h2 id="totalUsers" class="display-6 fw-bold mb-0">0</h2>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Usuarios</span>
+                    <div id="totalUsers" class="stat-number mt-2">0</div>
+                    <span class="badge bg-light text-primary border mt-2 small">Usuarios registrados</span>
                   </div>
-                  <span class="stat-icon">👥</span>
+                  <div class="stat-icon stat-icon-users">👥</div>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- Total Servicios -->
           <div class="col-12 col-md-4">
-            <div class="card stat-card shadow-sm border-0 h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+            <div class="card stat-card stat-card-services h-100">
+              <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <p class="text-secondary mb-1">Total Servicios</p>
-                    <h2 id="totalServices" class="display-6 fw-bold mb-0">0</h2>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Servicios</span>
+                    <div id="totalServices" class="stat-number mt-2">0</div>
+                    <span class="badge bg-light text-success border mt-2 small">Servicios activos</span>
                   </div>
-                  <span class="stat-icon">🛠️</span>
+                  <div class="stat-icon stat-icon-services">🛠️</div>
                 </div>
               </div>
             </div>
           </div>
 
+          <!-- Total Reservas -->
           <div class="col-12 col-md-4">
-            <div class="card stat-card shadow-sm border-0 h-100">
-              <div class="card-body">
-                <div class="d-flex justify-content-between align-items-start">
+            <div class="card stat-card stat-card-reservations h-100">
+              <div class="card-body p-4">
+                <div class="d-flex justify-content-between align-items-center">
                   <div>
-                    <p class="text-secondary mb-1">Total Reservas</p>
-                    <h2 id="totalReservations" class="display-6 fw-bold mb-0">0</h2>
+                    <span class="text-secondary small fw-semibold text-uppercase tracking-wider">Total Reservas</span>
+                    <div id="totalReservations" class="stat-number mt-2">0</div>
+                    <span class="badge bg-light text-warning-emphasis border mt-2 small">Reservas acumuladas</span>
                   </div>
-                  <span class="stat-icon">📅</span>
+                  <div class="stat-icon stat-icon-reservations">📅</div>
                 </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Tarjeta de Acciones Rápidas -->
+        <div class="card action-card border-0 shadow-sm mb-4">
+          <div class="card-body p-4">
+            <h2 class="h5 fw-bold mb-3">Acciones Rápidas</h2>
+            <div class="row g-3">
+              <div class="col-12 col-md-4">
+                <button class="btn btn-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
+                  data-bs-toggle="modal" data-bs-target="#newReservationModal">
+                  <span>➕</span> Registrar Reserva
+                </button>
+              </div>
+              <div class="col-12 col-md-4">
+                <button class="btn btn-outline-primary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
+                  data-bs-toggle="modal" data-bs-target="#profileModal">
+                  <span>👤</span> Ver Mi Perfil
+                </button>
+              </div>
+              <div class="col-12 col-md-4">
+                <button class="btn btn-outline-secondary w-100 py-2 fw-semibold d-flex align-items-center justify-content-center gap-2"
+                  onclick="location.reload();">
+                  <span>🔄</span> Actualizar Datos
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <div class="card border-0 shadow-sm">
-          <div class="card-body">
-            <h2 class="h5 fw-bold">Acciones rápidas</h2>
-            <div class="row g-3 mt-1">
-              <div class="col-12 col-md-4"><button class="btn btn-primary w-100">+ Nueva reserva</button></div>
-              <div class="col-12 col-md-4"><button class="btn btn-outline-primary w-100">Ver reservas</button></div>
-              <div class="col-12 col-md-4"><button class="btn btn-outline-secondary w-100">Mi perfil</button></div>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   </div>
 
+  <!-- Modal: Nueva Reserva -->
+  <div class="modal fade" id="newReservationModal" tabindex="-1" aria-labelledby="newReservationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="newReservationModalLabel">Registrar Nueva Reserva</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <form id="newReservationForm">
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="resService" class="form-label fw-semibold">Servicio o Espacio <span class="text-danger">*</span></label>
+              <select class="form-select" id="resService" required>
+                <option value="" selected disabled>Selecciona un servicio...</option>
+                <option value="Cancha de Fútbol 5 Sintética">Cancha de Fútbol 5 Sintética</option>
+                <option value="Auditorio Principal (120 personas)">Auditorio Principal (120 personas)</option>
+                <option value="Sala de Juntas VIP">Sala de Juntas VIP</option>
+                <option value="Piscina Olímpica Climatizada">Piscina Olímpica Climatizada</option>
+                <option value="Gimnasio y Zona Fitness">Gimnasio y Zona Fitness</option>
+                <option value="Salón de Eventos Sociales">Salón de Eventos Sociales</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="resDate" class="form-label fw-semibold">Fecha y Hora <span class="text-danger">*</span></label>
+              <input type="datetime-local" class="form-control" id="resDate" required>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            <button type="submit" class="btn btn-primary fw-semibold">Confirmar Reserva</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Mi Perfil -->
+  <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="profileModalLabel">Información de la Cuenta</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="d-flex align-items-center gap-3 mb-4 p-3 bg-light rounded-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
+              style="width: 54px; height: 54px; font-size: 1.5rem;">
+              👤
+            </div>
+            <div>
+              <h5 class="fw-bold mb-0" id="profileModalName">Usuario</h5>
+              <span class="badge bg-primary text-white" id="profileModalRole">Rol</span>
+            </div>
+          </div>
+          <div class="mb-2">
+            <strong class="text-secondary small d-block">Correo Electrónico:</strong>
+            <span id="profileModalEmail" class="text-dark">correo@ejemplo.com</span>
+          </div>
+          <div class="mb-2">
+            <strong class="text-secondary small d-block">Identificador de Usuario (ID):</strong>
+            <code id="profileModalId" class="text-dark">usr-demo</code>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmar Cierre de Sesión -->
+  <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content text-center p-3">
+        <div class="modal-body">
+          <div class="fs-1 mb-2">🚪</div>
+          <h5 class="fw-bold mb-2">¿Cerrar Sesión?</h5>
+          <p class="text-secondary small mb-3">Tendrás que volver a ingresar tus credenciales para acceder al panel.</p>
+          <div class="d-flex gap-2 justify-content-center">
+            <button type="button" class="btn btn-outline-secondary btn-sm px-3" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" id="confirmLogoutAction" class="btn btn-danger btn-sm px-3 fw-semibold">Sí, Cerrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Módulo en Construcción -->
+  <div class="modal fade" id="notImplementedModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content text-center p-3">
+        <div class="modal-body">
+          <div class="fs-1 mb-2">🚧</div>
+          <h5 class="fw-bold mb-2">Módulo en Desarrollo</h5>
+          <p class="text-secondary small mb-3">Este módulo está programado para los siguientes sprints del proyecto.</p>
+          <button type="button" class="btn btn-primary btn-sm px-4" data-bs-dismiss="modal">Aceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Bootstrap Bundle, Lógica Central y Controlador -->
+  <script src="js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/dashboard.js"></script>
 </body>
 
 </html>

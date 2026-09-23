@@ -4,82 +4,185 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Sistema de Reservas | Registro</title>
+  <title>Sistema de Reservas | Registro de Usuario</title>
+  <!-- Bootstrap 5.3 CSS (Local y CDN fallback) -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+  <!-- Estilos Personalizados -->
   <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body class="auth-page">
   <main class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
     <div class="row w-100 justify-content-center">
-      <div class="col-12 col-sm-11 col-md-8 col-lg-6">
-        <section class="card auth-card shadow border-0">
+      <div class="col-12 col-sm-11 col-md-9 col-lg-7 col-xl-5">
+        
+        <div class="card auth-card border-0 shadow-lg">
           <div class="card-body p-4 p-md-5">
+            
+            <!-- Encabezado de Marca -->
             <div class="text-center mb-4">
               <div class="brand-logo mx-auto mb-3">SR</div>
-              <h1 class="h3 fw-bold mb-1">Crear cuenta</h1>
-              <p class="text-secondary mb-0">Regístrate en el Sistema de Reservas</p>
+              <h1 class="h3 fw-bold mb-1 text-dark">Crear cuenta</h1>
+              <p class="text-secondary small mb-0">Completa tus datos para unirte al Sistema de Reservas</p>
             </div>
 
-            <div id="registerAlert" class="alert d-none" role="alert"></div>
+            <!-- Contenedor dinámico de alertas -->
+            <div id="registerAlert" class="alert d-none mb-3" role="alert"></div>
 
+            <!-- Formulario de Registro -->
             <form id="registerForm" novalidate>
+              
+              <!-- Nombre Completo -->
               <div class="mb-3">
-                <label for="name" class="form-label fw-semibold">Nombre completo <span
-                    class="text-danger">*</span></label>
-                <input type="text" class="form-control form-control-lg" id="name" name="name"
-                  placeholder="Ej. Juan Pérez" autocomplete="name" required minlength="3">
-                <div class="invalid-feedback">Ingresa tu nombre completo.</div>
+                <label for="name" class="form-label fw-semibold">
+                  Nombre completo <span class="text-danger">*</span>
+                </label>
+                <input type="text" class="form-control" id="name" name="name"
+                  placeholder="Ej. Juan Pérez Remolina" autocomplete="name" required minlength="3">
+                <div class="invalid-feedback">Ingresa tu nombre completo (mínimo 3 caracteres).</div>
               </div>
 
+              <!-- Correo Electrónico -->
               <div class="mb-3">
-                <label for="email" class="form-label fw-semibold">Correo electrónico <span
-                    class="text-danger">*</span></label>
-                <input type="email" class="form-control form-control-lg" id="email" name="email"
-                  placeholder="correo@ejemplo.com" autocomplete="email" required>
-                <div class="invalid-feedback">Ingresa un correo válido.</div>
+                <label for="email" class="form-label fw-semibold">
+                  Correo electrónico <span class="text-danger">*</span>
+                </label>
+                <input type="email" class="form-control" id="email" name="email"
+                  placeholder="nombre@ejemplo.com" autocomplete="email" required>
+                <div class="invalid-feedback">Ingresa un correo electrónico con formato válido.</div>
               </div>
 
+              <!-- Contraseña -->
               <div class="mb-3">
-                <label for="password" class="form-label fw-semibold">Contraseña <span
-                    class="text-danger">*</span></label>
-                <input type="password" class="form-control form-control-lg" id="password" name="password"
-                  placeholder="Mínimo 8 caracteres" autocomplete="new-password" required minlength="8">
-                <div class="form-text">Debe contener mayúscula, minúscula, número y símbolo.</div>
-                <div class="progress mt-2" style="height: 6px;">
+                <label for="password" class="form-label fw-semibold">
+                  Contraseña <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="password" name="password"
+                    placeholder="Crea una contraseña segura" autocomplete="new-password" required minlength="8">
+                  <button class="btn btn-outline-secondary" type="button" id="toggleRegisterPassword"
+                    aria-label="Mostrar contraseña" title="Mostrar u ocultar contraseña">👁️</button>
+                  <div class="invalid-feedback">La contraseña no cumple todos los criterios requeridos.</div>
+                </div>
+
+                <!-- Barra de fortaleza de contraseña -->
+                <div class="progress password-meter mt-2">
                   <div id="passwordStrength" class="progress-bar" style="width: 0%"></div>
                 </div>
                 <div id="passwordHint" class="small text-secondary mt-1">Seguridad de contraseña</div>
-                <div class="invalid-feedback">La contraseña no cumple los requisitos.</div>
+
+                <!-- Lista interactiva de requisitos en tiempo real -->
+                <div class="password-requirements p-2 bg-light rounded-3 mt-2 border">
+                  <div id="reqLength" class="requirement-item invalid">
+                    <span class="check-icon fw-bold">•</span> Mínimo 8 caracteres
+                  </div>
+                  <div id="reqUpper" class="requirement-item invalid">
+                    <span class="check-icon fw-bold">•</span> Al menos una letra mayúscula (A-Z)
+                  </div>
+                  <div id="reqLower" class="requirement-item invalid">
+                    <span class="check-icon fw-bold">•</span> Al menos una letra minúscula (a-z)
+                  </div>
+                  <div id="reqNumber" class="requirement-item invalid">
+                    <span class="check-icon fw-bold">•</span> Al menos un número (0-9)
+                  </div>
+                  <div id="reqSymbol" class="requirement-item invalid">
+                    <span class="check-icon fw-bold">•</span> Al menos un carácter especial (@, $, !, %, *, #, etc.)
+                  </div>
+                </div>
               </div>
 
+              <!-- Confirmar Contraseña -->
               <div class="mb-3">
-                <label for="confirmPassword" class="form-label fw-semibold">Confirmar contraseña <span
-                    class="text-danger">*</span></label>
-                <input type="password" class="form-control form-control-lg" id="confirmPassword" name="confirmPassword"
-                  placeholder="Repite tu contraseña" autocomplete="new-password" required>
-                <div class="invalid-feedback">Las contraseñas deben coincidir.</div>
+                <label for="confirmPassword" class="form-label fw-semibold">
+                  Confirmar contraseña <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                  <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                    placeholder="Repite la contraseña" autocomplete="new-password" required>
+                  <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword"
+                    aria-label="Mostrar confirmar contraseña" title="Mostrar u ocultar contraseña">👁️</button>
+                  <div class="invalid-feedback">Las contraseñas deben coincidir exactamente.</div>
+                </div>
               </div>
 
+              <!-- Widget Anti-Bot / reCAPTCHA -->
+              <div class="mb-3">
+                <div id="captchaContainer" class="captcha-container">
+                  <div class="captcha-box">
+                    <input class="form-check-input captcha-checkbox" type="checkbox" id="captchaCheck" required>
+                    <label class="captcha-label" for="captchaCheck">No soy un robot</label>
+                  </div>
+                  <div class="captcha-badge">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L4 5V11.09C4 16.14 7.41 20.85 12 22C16.59 20.85 20 16.14 20 11.09V5L12 2Z" fill="#2563EB" fill-opacity="0.15" stroke="#2563EB" stroke-width="2"/>
+                      <path d="M9 12L11 14L15 10" stroke="#2563EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>reCAPTCHA</span><br>
+                    <span class="text-muted" style="font-size: 0.6rem;">Seguridad</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Términos y Condiciones -->
               <div class="form-check mb-4">
                 <input class="form-check-input" type="checkbox" id="terms" required>
-                <label class="form-check-label" for="terms">
-                  Acepto los términos y condiciones <span class="text-danger">*</span>
+                <label class="form-check-label small" for="terms">
+                  Acepto los <a href="#" class="text-primary text-decoration-none fw-semibold" data-bs-toggle="modal" data-bs-target="#termsModal">términos y condiciones</a> del servicio <span class="text-danger">*</span>
                 </label>
-                <div class="invalid-feedback">Debes aceptar los términos.</div>
+                <div class="invalid-feedback">Debes aceptar los términos y condiciones.</div>
               </div>
 
-              <button type="submit" class="btn btn-primary btn-lg w-100 fw-semibold">Registrarse</button>
+              <!-- Botón de Registro -->
+              <button type="submit" id="registerSubmitBtn" class="btn btn-primary btn-lg w-100 fw-semibold">
+                Registrarse
+              </button>
             </form>
 
-            <p class="text-center mt-4 mb-0">
-              ¿Ya tienes una cuenta?
-              <a href="index.html" class="fw-semibold text-decoration-none">Volver al Login</a>
+            <!-- Acceso a Login -->
+            <p class="text-center mt-4 mb-0 text-secondary small">
+              ¿Ya tienes una cuenta registrada?
+              <a href="index.html" class="fw-semibold text-primary text-decoration-none">Inicia sesión</a>
             </p>
+
           </div>
-        </section>
+        </div>
+
       </div>
     </div>
   </main>
+
+  <!-- Modal de Términos y Condiciones -->
+  <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="termsModalLabel">Términos y Condiciones de Uso</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body small text-secondary">
+          <h6 class="fw-bold text-dark">1. Aceptación del Servicio</h6>
+          <p>Al registrarte en el Sistema de Reservas, aceptas hacer un uso responsable y legítimo de las instalaciones y recursos gestionados a través de la plataforma.</p>
+          <h6 class="fw-bold text-dark">2. Confidencialidad y Seguridad</h6>
+          <p>Tus datos personales y reservas están protegidos bajo estándares de seguridad web. Eres responsable de mantener la confidencialidad de tu contraseña.</p>
+          <h6 class="fw-bold text-dark">3. Cancelaciones y Puntualidad</h6>
+          <p>Toda reserva debe ser cancelada con al menos 2 horas de anticipación para permitir la asignación del espacio a otros usuarios.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal"
+            onclick="document.getElementById('terms').checked = true; document.getElementById('terms').classList.remove('is-invalid');">
+            Entendido y Aceptar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts: Bootstrap Bundle, Lógica Central y Controlador -->
+  <script src="js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/registro.js"></script>
 </body>
 
 </html>
