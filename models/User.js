@@ -10,7 +10,8 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: [true, 'El correo es obligatorio'],
         unique: true,
-        trim: true, 
+        lowercase: true,
+        trim: true
     },
     password: {
         type: String,
@@ -20,8 +21,13 @@ const userSchema = new mongoose.Schema({
         type: String,
         enum: ['user', 'admin'],
         default: 'user'
-    }
-}, {timestamps: true});
+    },
+    status: {
+        type: String,
+        enum: ['active', 'inactive'],
+        default: 'active'
+    },
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);
 
