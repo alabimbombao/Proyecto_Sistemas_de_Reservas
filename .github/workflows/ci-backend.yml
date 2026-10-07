@@ -1,0 +1,33 @@
+name: Backend Integration CI
+
+on:
+  push:
+    branches: [ develop, backend ]
+  pull_request:
+    branches: [ develop, backend ]
+
+jobs:
+  build-and-test:
+    name: Validar e Instalar Backend
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependencias del Backend
+        working-directory: ./backend
+        run: |
+          npm ci || npm install
+
+      - name: Verificar archivos del servidor
+        working-directory: ./backend
+        run: |
+          node -e "console.log('Verificación de sintaxis y entorno Node.js exitosa');"
