@@ -25,7 +25,8 @@ const LOCKOUT_CONFIG = {
  * Inicializa la base de datos de prueba en localStorage si está vacía
  */
 function initLocalStorageDB() {
-  if (!localStorage.getItem(STORAGE_KEYS.USERS_DB)) {
+  const storedUsersRaw = localStorage.getItem(STORAGE_KEYS.USERS_DB);
+  if (!storedUsersRaw) {
     const defaultUsers = [
       {
         id: 'usr-1',
@@ -33,6 +34,7 @@ function initLocalStorageDB() {
         correo: 'admin@sistema.com',
         password: 'AdminPassword123!',
         rol: 'admin',
+        estado: 'activo',
         createdAt: '2026-09-01T08:00:00.000Z'
       },
       {
@@ -41,31 +43,148 @@ function initLocalStorageDB() {
         correo: 'carlos@ejemplo.com',
         password: 'UserPassword123!',
         rol: 'usuario',
+        estado: 'activo',
         createdAt: '2026-09-05T10:30:00.000Z'
+      },
+      {
+        id: 'usr-3',
+        nombre: 'Ana María Gómez',
+        correo: 'ana.gomez@empresa.com',
+        password: 'UserPassword123!',
+        rol: 'usuario',
+        estado: 'activo',
+        createdAt: '2026-09-12T14:15:00.000Z'
+      },
+      {
+        id: 'usr-4',
+        nombre: 'Roberto Silva',
+        correo: 'roberto.silva@demo.com',
+        password: 'UserPassword123!',
+        rol: 'usuario',
+        estado: 'inactivo',
+        createdAt: '2026-09-15T11:00:00.000Z'
       }
     ];
     localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(defaultUsers));
+  } else {
+    // Asegurar retrocompatibilidad agregando campo estado si no existe
+    try {
+      const users = JSON.parse(storedUsersRaw);
+      let updated = false;
+      users.forEach(u => {
+        if (!u.estado) {
+          u.estado = 'activo';
+          updated = true;
+        }
+      });
+      if (updated) {
+        localStorage.setItem(STORAGE_KEYS.USERS_DB, JSON.stringify(users));
+      }
+    } catch (e) {}
   }
 
-  if (!localStorage.getItem(STORAGE_KEYS.SERVICES_DB)) {
+  const storedServicesRaw = localStorage.getItem(STORAGE_KEYS.SERVICES_DB);
+  if (!storedServicesRaw) {
     const defaultServices = [
-      { id: 'srv-1', nombre: 'Cancha de Fútbol 5 Sintética', categoria: 'Deportes' },
-      { id: 'srv-2', nombre: 'Auditorio Principal (120 personas)', categoria: 'Eventos' },
-      { id: 'srv-3', nombre: 'Sala de Juntas Ejecutiva VIP', categoria: 'Empresarial' },
-      { id: 'srv-4', nombre: 'Piscina Olímpica Climatizada', categoria: 'Acuáticos' },
-      { id: 'srv-5', nombre: 'Gimnasio y Zona Fitness', categoria: 'Salud' },
-      { id: 'srv-6', nombre: 'Salón de Eventos Sociales', categoria: 'Social' },
-      { id: 'srv-7', nombre: 'Laboratorio de Cómputo Multimedia', categoria: 'Tecnología' },
-      { id: 'srv-8', nombre: 'Terraza BBQ Panorámica', categoria: 'Recreación' }
+      {
+        id: 'srv-1',
+        nombre: 'Cancha de Fútbol 5 Sintética',
+        categoria: 'Deportes',
+        duracion: 60,
+        precio: 85000,
+        disponible: true,
+        descripcion: 'Cancha de grama sintética con iluminación nocturna LED y graderías techadas.'
+      },
+      {
+        id: 'srv-2',
+        nombre: 'Auditorio Principal (120 personas)',
+        categoria: 'Eventos',
+        duracion: 120,
+        precio: 350000,
+        disponible: true,
+        descripcion: 'Auditorio con acústica profesional, proyector láser 4K, cabina de sonido y aire acondicionado.'
+      },
+      {
+        id: 'srv-3',
+        nombre: 'Sala de Juntas Ejecutiva VIP',
+        categoria: 'Empresarial',
+        duracion: 60,
+        precio: 95000,
+        disponible: true,
+        descripcion: 'Mesa para 14 personas, sistema de videoconferencia Zoom/Teams y cafetera premium.'
+      },
+      {
+        id: 'srv-4',
+        nombre: 'Piscina Olímpica Climatizada',
+        categoria: 'Acuáticos',
+        duracion: 90,
+        precio: 45000,
+        disponible: true,
+        descripcion: 'Carril exclusivo de nado libre climatizado a 27°C con supervisión de salvavidas.'
+      },
+      {
+        id: 'srv-5',
+        nombre: 'Gimnasio y Zona Fitness',
+        categoria: 'Salud',
+        duracion: 60,
+        precio: 30000,
+        disponible: true,
+        descripcion: 'Acceso total a máquinas de cardio, pesas libres, vestidores con duchas y sauna.'
+      },
+      {
+        id: 'srv-6',
+        nombre: 'Salón de Eventos Sociales',
+        categoria: 'Social',
+        duracion: 240,
+        precio: 600000,
+        disponible: false,
+        descripcion: 'Espacio cerrado con capacidad de 80 personas para celebraciones, cocina auxiliar y bar.'
+      },
+      {
+        id: 'srv-7',
+        nombre: 'Laboratorio de Cómputo Multimedia',
+        categoria: 'Tecnología',
+        duracion: 120,
+        precio: 180000,
+        disponible: true,
+        descripcion: '20 estaciones equipadas con software de edición y conexión a internet simétrica de alta velocidad.'
+      },
+      {
+        id: 'srv-8',
+        nombre: 'Terraza BBQ Panorámica',
+        categoria: 'Recreación',
+        duracion: 180,
+        precio: 220000,
+        disponible: true,
+        descripcion: 'Terraza al aire libre con parrilla a gas, mesas rústicas y vista panorámica a la ciudad.'
+      }
     ];
     localStorage.setItem(STORAGE_KEYS.SERVICES_DB, JSON.stringify(defaultServices));
+  } else {
+    // Asegurar retrocompatibilidad con precio y duracion si vienen del sprint 1
+    try {
+      const services = JSON.parse(storedServicesRaw);
+      let updated = false;
+      services.forEach((s, idx) => {
+        if (s.duracion === undefined || s.precio === undefined) {
+          s.duracion = s.duracion || (60 + (idx % 3) * 30);
+          s.precio = s.precio || (50000 + (idx % 5) * 25000);
+          s.disponible = s.disponible !== undefined ? s.disponible : true;
+          s.descripcion = s.descripcion || `Servicio de categoría ${s.categoria} completamente equipado.`;
+          updated = true;
+        }
+      });
+      if (updated) {
+        localStorage.setItem(STORAGE_KEYS.SERVICES_DB, JSON.stringify(services));
+      }
+    } catch (e) {}
   }
 
   if (!localStorage.getItem(STORAGE_KEYS.RESERVATIONS_DB)) {
     const defaultReservations = [
-      { id: 'res-1', usuario: 'carlos@ejemplo.com', servicio: 'Cancha de Fútbol 5', fecha: '2026-09-24 18:00', estado: 'Confirmada' },
-      { id: 'res-2', usuario: 'admin@sistema.com', servicio: 'Sala de Juntas VIP', fecha: '2026-09-25 09:00', estado: 'Confirmada' },
-      { id: 'res-3', usuario: 'carlos@ejemplo.com', servicio: 'Piscina Olímpica', fecha: '2026-09-26 15:00', estado: 'Pendiente' }
+      { id: 'res-1', usuario: 'carlos@ejemplo.com', servicio: 'Cancha de Fútbol 5 Sintética', fecha: '2026-09-24 18:00', estado: 'Confirmada' },
+      { id: 'res-2', usuario: 'admin@sistema.com', servicio: 'Sala de Juntas Ejecutiva VIP', fecha: '2026-09-25 09:00', estado: 'Confirmada' },
+      { id: 'res-3', usuario: 'carlos@ejemplo.com', servicio: 'Piscina Olímpica Climatizada', fecha: '2026-09-26 15:00', estado: 'Pendiente' }
     ];
     localStorage.setItem(STORAGE_KEYS.RESERVATIONS_DB, JSON.stringify(defaultReservations));
   }

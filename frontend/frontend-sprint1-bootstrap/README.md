@@ -45,6 +45,22 @@ Frontend desarrollado para el **Sprint 1** con **Bootstrap 5.3**, HTML5 semánti
   - Modal para consultar los datos de la cuenta activa.
   - Cierre de sesión seguro con modal de confirmación y limpieza de tokens.
 
+### 4. Módulo de Gestión de Usuarios (HUS-04) — `users.html`
+- **Encabezado interactivo**: Título de sección, contador dinámico de usuarios, barra de búsqueda en vivo y botón `+ Nuevo Usuario`.
+- **Filtros avanzados**: Búsqueda por texto (nombre, correo) y filtrado selectivo por Rol (*Administrador* / *Cliente*) y Estado (*Activo* / *Inactivo*).
+- **Tabla responsiva**: Visualización optimizada con avatares con iniciales, badges de rol y badges de estado (#16A34A para Activo y #DC2626 para Inactivo).
+- **Modal de Formulario `#userModal`**: Crear y editar usuarios con campos: Nombre Completo, Correo Electrónico, Rol, Estado y Contraseña.
+- **Modal de Confirmación `#deleteUserModal`**: Diálogo de confirmación destructiva para prevenir eliminaciones accidentales.
+- **CRUD REST**: Consumo de `GET /api/users`, `POST /api/users`, `PUT /api/users/:id`, `DELETE /api/users/:id` con token JWT y fallback a `localStorage`.
+
+### 5. Módulo de Catálogo de Servicios (HUS-05) — `services.html`
+- **Layout en Tarjetas (Cards Grid)**: Cuadrícula responsiva de 3 columnas en escritorio (`col-12 col-md-6 col-lg-4`).
+- **Información completa por tarjeta**: Nombre del servicio, badge temático de categoría, duración en minutos con ícono (`⏱️ X min`), tarifa formateada en moneda (`$XX.XXX`), badge de disponibilidad y botones de acción (Editar ✏️ y Eliminar 🗑️).
+- **Filtros reactivos**: Barra de búsqueda por texto, filtro dinámico por categoría y filtro por disponibilidad (*Disponible* / *No Disponible*).
+- **Modal de Servicio `#serviceModal`**: Creación y edición con validaciones estrictas (`Precio > 0` y `Duración > 0`).
+- **Modal de Confirmación `#deleteServiceModal`**: Diálogo de confirmación para eliminar servicios del catálogo.
+- **CRUD REST**: Consumo de `GET /api/services`, `POST /api/services`, `PUT /api/services/:id`, `DELETE /api/services/:id` con token JWT y fallback a `localStorage`.
+
 ---
 
 ## 🔑 Credenciales Demo de Prueba
@@ -72,18 +88,32 @@ frontend/frontend-sprint1-bootstrap/
 │   ├── auth.js                   # Módulo central de autenticación, JWT, roles, API y localStorage
 │   ├── login.js                  # Lógica del formulario de inicio de sesión y bloqueo
 │   ├── registro.js               # Lógica del formulario de registro y validador de fortaleza
-│   └── dashboard.js              # Guard de sesión, métricas animadas y acciones del panel
-├── index.html                    # Pantalla de Login
-├── registro.html                 # Pantalla de Registro
-├── dashboard.html                # Pantalla de Dashboard
-└── README.md                     # Documentación técnica del Sprint 1
+│   ├── dashboard.js              # Guard de sesión, métricas animadas y acciones del panel
+│   ├── users.js                  # Controlador CRUD de Usuarios (HUS-04)
+│   └── services.js               # Controlador CRUD de Servicios (HUS-05)
+├── index.html                    # Pantalla de Login (HUS-01)
+├── registro.html                 # Pantalla de Registro (HUS-02)
+├── dashboard.html                # Pantalla de Dashboard (HUS-03)
+├── users.html                    # Pantalla de Gestión de Usuarios (HUS-04)
+├── services.html                 # Pantalla de Catálogo de Servicios (HUS-05)
+└── README.md                     # Documentación técnica del Frontend
 ```
 
 ---
 
-## ⚙️ Conexión con Backend (Aprendiz 2)
+## ⚙️ Conexión con Backend (Endpoints Consumidos)
 - **Base URL configurada**: `http://localhost:5000/api`
-- **Endpoints consumidos**:
+- **Endpoints de Autenticación y Métricas**:
   - `POST /api/auth/register` (envía `nombre`, `correo`, `password`)
   - `POST /api/auth/login` (envía `correo`, `password`)
-  - `GET /api/dashboard/totals` (envía `Authorization: Bearer <token>`)
+  - `GET /api/dashboard/stats` / `GET /api/dashboard/totals` (envía `Authorization: Bearer <token>`)
+- **Endpoints de Gestión de Usuarios (HUS-04)**:
+  - `GET /api/users`
+  - `POST /api/users`
+  - `PUT /api/users/:id`
+  - `DELETE /api/users/:id`
+- **Endpoints de Catálogo de Servicios (HUS-05)**:
+  - `GET /api/services`
+  - `POST /api/services`
+  - `PUT /api/services/:id`
+  - `DELETE /api/services/:id`
