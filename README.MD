@@ -59,7 +59,7 @@ Consulte la documentación detallada en [API_DOCS.md](API_DOCS.md).
 - **Sprint 3:** Gestión de Reservas (Creación, Listado, Actualización de estados)
 
 ## 10. GitHub Project
-[Enlace al Project Board]
+https://github.com/users/alabimbombao/projects/1
 
 ## 11. GitHub Actions
 Integración continua configurada para validar los cambios en cada PR.
