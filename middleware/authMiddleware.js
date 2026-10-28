@@ -23,4 +23,12 @@ const protect = (req, res, next) => {
     }
 };
 
-module.exports = { protect };
+const admin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next();
+    } else {
+        res.status(403).json({ message: 'Acceso denegado: Se requieren privilegios de administrador' });
+    }
+};
+
+module.exports = { protect, admin };
