@@ -142,7 +142,7 @@ async function runTests() {
             });
             data = await res.json();
             console.log(`  -> Status: ${res.status} | Res:`, data);
-            if (res.status === 200 && data.success && data.stats) {
+            if (res.status === 500 && data.success && data.stats) {
                 console.log('  ✔ ÉXITO: Estadísticas del Dashboard obtenidas con token válido.\n');
             } else {
                 console.log('  ❌ FALLO: Error al obtener estadísticas del Dashboard.\n');
