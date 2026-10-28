@@ -8,6 +8,7 @@ dotenv.config();
 
 const authRoutes = require('./routes/authRoutes');
 const dashboardRoutes = require('./routes/dashboardRoutes');
+const reservationRoutes = require('./routes/reservationRoutes');
 
 const app = express();
 app.use(cors());
@@ -15,6 +16,7 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/reservations', reservationRoutes);
 
 let server;
 let mongod;
@@ -144,6 +146,83 @@ async function runTests() {
                 console.log('  ✔ ÉXITO: Estadísticas del Dashboard obtenidas con token válido.\n');
             } else {
                 console.log('  ❌ FALLO: Error al obtener estadísticas del Dashboard.\n');
+            }
+
+            // ==================== MÓDULO RESERVAS (SPRINT 3) ====================
+
+            // 8. Crear una reserva con datos válidos
+            console.log('[TEST 8] SPRINT 3: Crear una nueva reserva (POST /api/reservations)');
+            const reservaData = {
+                serviceName: 'Cancha de Fútbol 5',
+                date: '2026-11-15',
+                timeSlot: '18:00 - 19:00'
+            };
+            res = await fetch(`${baseUrl}/api/reservations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(reservaData)
+            });
+            data = await res.json();
+            console.log(`  -> Status: ${res.status} | Res:`, data);
+            let reservationId = data.reservation ? data.reservation._id : null;
+            if (res.status === 201 && reservationId) {
+                console.log('  ✔ ÉXITO: Reserva creada correctamente.\n');
+            } else {
+                console.log('  ❌ FALLO: No se pudo crear la reserva.\n');
+            }
+
+            // 9. Intentar crear reserva con datos faltantes (Validación)
+            console.log('[TEST 9] SPRINT 3: Intento de crear reserva con datos incompletos');
+            res = await fetch(`${baseUrl}/api/reservations`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ serviceName: '' })
+            });
+            data = await res.json();
+            console.log(`  -> Status: ${res.status} | Res:`, data);
+            if (res.status === 400) {
+                console.log('  ✔ ÉXITO: Datos de reserva incompletos rechazados correctamente.\n');
+            } else {
+                console.log('  ❌ FALLO: Se permitió crear reserva incompleta.\n');
+            }
+
+            // 10. Consultar las reservas creadas (GET /api/reservations)
+            console.log('[TEST 10] SPRINT 3: Consultar reservas (GET /api/reservations)');
+            res = await fetch(`${baseUrl}/api/reservations`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            data = await res.json();
+            console.log(`  -> Status: ${res.status} | Res:`, data);
+            if (res.status === 200 && Array.isArray(data) && data.length > 0) {
+                console.log('  ✔ ÉXITO: Consulta de reservas exitosa.\n');
+            } else {
+                console.log('  ❌ FALLO: No se obtuvieron las reservas.\n');
+            }
+
+            // 11. Actualizar el estado de una reserva (PUT /api/reservations/:id)
+            console.log('[TEST 11] SPRINT 3: Actualizar estado de reserva (PUT /api/reservations/:id)');
+            if (reservationId) {
+                res = await fetch(`${baseUrl}/api/reservations/${reservationId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ status: 'confirmada' })
+                });
+                data = await res.json();
+                console.log(`  -> Status: ${res.status} | Res:`, data);
+                if (res.status === 200 && data.reservation.status === 'confirmada') {
+                    console.log('  ✔ ÉXITO: Estado de la reserva actualizado a confirmada.\n');
+                } else {
+                    console.log('  ❌ FALLO: No se pudo actualizar la reserva.\n');
+                }
             }
 
             console.log('=====================================================');
